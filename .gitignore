@@ -5,6 +5,7 @@ temp/
 # sbt specific
 .cache
 .cache-main
+.cache-tests
 .history
 .lib/
 dist/*
