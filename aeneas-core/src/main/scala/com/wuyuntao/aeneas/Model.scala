@@ -3,6 +3,6 @@ package com.wuyuntao.aeneas
 /**
  * @author Wu Yuntao
  */
-abstract class Model {
+trait Model {
 
 }

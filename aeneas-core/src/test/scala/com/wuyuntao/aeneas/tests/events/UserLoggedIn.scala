@@ -1,4 +1,4 @@
-package com.wuyuntao.aeneas.tests
+package com.wuyuntao.aeneas.tests.events
 
 import com.wuyuntao.aeneas.Event
 

@@ -1,8 +1,11 @@
 package com.wuyuntao.aeneas
 
+import java.util.UUID
+
 /**
  * @author Wu Yuntao
  */
-abstract class Snapshot extends Table {
-  
+trait Snapshot extends Table {
+  column[UUID]("owner")
+  column[Int]("revision")
 }

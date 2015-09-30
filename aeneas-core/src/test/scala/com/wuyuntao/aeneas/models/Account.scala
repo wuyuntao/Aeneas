@@ -1,4 +1,4 @@
-package com.wuyuntao.aeneas.tests
+package com.wuyuntao.aeneas.models
 
 import com.wuyuntao.aeneas.Model
 

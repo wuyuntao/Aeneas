@@ -6,7 +6,7 @@ import java.util.UUID
 /**
  * @author Wu Yuntao
  */
-abstract class Event extends Table {
+abstract trait Event extends Table {
   column[UUID]("owner")
   column[Int]("revision")
   column[OffsetDateTime]("time")

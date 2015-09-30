@@ -5,7 +5,7 @@ import scala.collection.mutable.HashMap
 /**
  * @author Wu Yuntao
  */
-abstract class Table {
+trait Table {
   private val columns = HashMap[String, Column]()
 
   def column[T](name: String): Column = {
