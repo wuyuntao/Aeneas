@@ -13,6 +13,7 @@ lazy val core = (project in file("aeneas-core")).
 
     libraryDependencies ++= Seq(
       "com.datastax.cassandra"  % "cassandra-driver-core" % "2.1.7",
+      "com.typesafe" % "config" % "1.3.0",
 
       "junit" % "junit" % "4.11" % "test",
       "com.novocode" % "junit-interface" % "0.11" % "test"
