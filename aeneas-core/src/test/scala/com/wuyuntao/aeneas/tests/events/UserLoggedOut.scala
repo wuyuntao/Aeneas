@@ -11,5 +11,7 @@ object UserLoggedOut {
 }
 
 class UserLoggedOut extends Event {
-  
+  def onSave = {
+    
+  }
 }

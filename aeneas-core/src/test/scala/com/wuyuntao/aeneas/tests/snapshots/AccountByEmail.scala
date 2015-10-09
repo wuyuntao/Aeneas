@@ -3,11 +3,11 @@ package com.wuyuntao.aeneas.tests.snapshots
 import com.wuyuntao.aeneas.QuerySet
 import com.wuyuntao.aeneas.Snapshot
 
-object AccountsByEmail {
-  val query = new QuerySet[AccountsByEmail]()
+object AccountByEmail {
+  val query = new QuerySet[AccountByEmail]()
 }
 
-class AccountsByEmail extends Snapshot {
+class AccountByEmail extends Snapshot {
   column[String]("email")
   column[String]("password")
 }

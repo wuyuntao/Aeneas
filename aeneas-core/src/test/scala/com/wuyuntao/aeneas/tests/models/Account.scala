@@ -1,38 +1,101 @@
 package com.wuyuntao.aeneas.tests.models
 
-import com.wuyuntao.aeneas.Event
-import com.wuyuntao.aeneas.Model
-import com.wuyuntao.aeneas.tests.events.PasswordChanged
-import com.wuyuntao.aeneas.tests.events.UserCreated
-import com.wuyuntao.aeneas.tests.events.UserLoggedIn
-import com.wuyuntao.aeneas.tests.events.UserLoggedOut
+import com.datastax.driver.core.utils.UUIDs
+import com.wuyuntao.aeneas._
+import com.wuyuntao.aeneas.tests.commands._
+import com.wuyuntao.aeneas.tests.events._
+import com.wuyuntao.aeneas.tests.snapshots._
 
 /**
  * @author Wu Yuntao
  */
-object Account extends Model {
-
-  // event handlers
-  def onSave(event: Event): Unit = event match {
-    case e: UserCreated     => onSaveUserCreated(e)
-    case e: UserLoggedIn    => onSaveUserLoggedIn(e)
-    case e: UserLoggedOut   => onSaveUserLoggedOut(e)
-    case e: PasswordChanged => onSavePasswordChanged(e)
+class Account extends Model {
+  def process(command: Command): Option[Event] = command match {
+    case c: Register       => register(c)
+    case c: Login          => login(c)
+    case c: Logout         => logout(c)
+    case c: ChangePassword => changePassword(c)
+    case _                 => None
   }
 
-  def onSaveUserCreated(event: UserCreated): Unit = {
-    // Create all snapshots of account 
+  def register(command: Register): Option[Event] = {
+    val emailExists = AccountByEmail.query.exists(command.email)
+    if (emailExists) {
+      return None
+    }
+
+    val usernameExists = AccountByUsername.query.exists(command.username)
+    if (usernameExists) {
+      return None
+    }
+
+    val id = UUIDs.timeBased
+    val event = new UserCreated()
+    event.id = id
+    event.email = command.email
+    event.password = command.password
+    event.username = command.username
+
+    UserCreated.query.create(event)
+
+    return Some(event)
   }
 
-  def onSaveUserLoggedIn(event: UserLoggedIn): Unit = {
-    // Update last login time field of AccountsById
+  def login(command: Login): Option[Event] = {
+    val account = AccountByEmail.query.get(command.email)
+    if (account.isEmpty) {
+      return None
+    }
+
+    if (account.get.password != command.password) {
+      return None
+    }
+
+    val info = AccountById.query.get(account.get.owner)
+    if (info.isEmpty) {
+      return None
+    } else {
+      val event = new UserLoggedIn()
+      event.owner = info.get.owner
+
+      UserLoggedIn.query.create(event)
+
+      return Some(event)
+    }
   }
 
-  def onSaveUserLoggedOut(event: UserLoggedOut): Unit = {
-    // Do nothing
+  def logout(command: Logout): Option[Event] = {
+
+    val account = AccountById.query.get(command.id)
+    if (account.isEmpty) {
+      return None
+    }
+
+    val event = new UserLoggedOut()
+    event.owner = command.id
+
+    UserLoggedOut.query.create(event)
+
+    return Some(event)
   }
 
-  def onSavePasswordChanged(event: PasswordChanged): Unit = {
-    // Update password fields in snapshots
+  def changePassword(command: ChangePassword): Option[Event] = {
+    val account = AccountById.query.get(command.id)
+    if (account.isEmpty) {
+      return None
+    }
+
+    if (account.get.password != command.password) {
+      return None
+    }
+
+    val event = new PasswordChanged()
+    event.password = command.password
+    event.newPassword = command.newPassword
+
+    PasswordChanged.query.create(event)
+
+    return Some(event)
+
   }
 }

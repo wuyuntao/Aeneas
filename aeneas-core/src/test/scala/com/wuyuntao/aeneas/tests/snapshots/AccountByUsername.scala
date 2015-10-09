@@ -3,10 +3,10 @@ package com.wuyuntao.aeneas.tests.snapshots
 import com.wuyuntao.aeneas.Snapshot
 import com.wuyuntao.aeneas.QuerySet
 
-object AccountsByUsername {
-  val query = new QuerySet[AccountsByUsername]()
+object AccountByUsername {
+  val query = new QuerySet[AccountByUsername]()
 }
 
-class AccountsByUsername extends Snapshot {
+class AccountByUsername extends Snapshot {
   column[String]("username")
 }

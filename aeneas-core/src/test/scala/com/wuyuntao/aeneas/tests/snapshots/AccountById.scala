@@ -9,11 +9,11 @@ import com.wuyuntao.aeneas.Snapshot
  * @author Wu Yuntao
  */
 
-object AccountsById {
-  val query = new QuerySet[AccountsById]()
+object AccountById {
+  val query = new QuerySet[AccountById]()
 }
 
-class AccountsById extends Snapshot {
+class AccountById extends Snapshot {
   column[String]("username")
   column[String]("password")
   column[OffsetDateTime]("last_login_time")

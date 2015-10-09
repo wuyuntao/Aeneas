@@ -14,8 +14,11 @@ abstract trait Event extends Table {
   lazy val batch = {
     val batch = new Batch
     
-    // insert event
+    // insert event and apply changes to snapshots
+    onSave
     
     batch
   }
+  
+  def onSave
 }
