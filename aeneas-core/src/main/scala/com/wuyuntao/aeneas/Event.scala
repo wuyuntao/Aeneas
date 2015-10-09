@@ -10,4 +10,12 @@ abstract trait Event extends Table {
   column[UUID]("owner")
   column[Int]("revision")
   column[OffsetDateTime]("time")
+
+  lazy val batch = {
+    val batch = new Batch
+    
+    // insert event
+    
+    batch
+  }
 }
