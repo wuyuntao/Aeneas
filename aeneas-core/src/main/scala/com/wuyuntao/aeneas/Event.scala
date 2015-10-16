@@ -11,14 +11,5 @@ abstract trait Event extends Table {
   column[Int]("revision")
   column[OffsetDateTime]("time")
 
-  lazy val batch = {
-    val batch = new Batch
-    
-    // insert event and apply changes to snapshots
-    onSave
-    
-    batch
-  }
-  
   def onSave
 }

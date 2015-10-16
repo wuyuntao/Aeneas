@@ -26,3 +26,33 @@ lazy val examples = (project in file("aeneas-examples")).
   settings(
     name := "aeneas-examples"
   )
+
+lazy val dsl = (project in file("aeneas-dsl")).
+  settings(commonSettings: _*).
+  settings(
+    name := "aeneas-dsl",
+
+    libraryDependencies ++= Seq(
+      "junit" % "junit" % "4.11" % "test",
+      "com.novocode" % "junit-interface" % "0.11" % "test"
+    )  
+  )
+
+lazy val dslExample = (project in file("aeneas-dsl-example")).
+  dependsOn(dsl).
+  settings(commonSettings: _*).
+  settings(
+    name := "aeneas-dsl-examples"
+  )
+
+lazy val dslCodeGen = (project in file("aeneas-dsl-codegen")).
+  dependsOn(dsl).
+  settings(commonSettings: _*).
+  settings(
+    name := "aeneas-dsl-codegen",
+
+    libraryDependencies ++= Seq(
+      "junit" % "junit" % "4.11" % "test",
+      "com.novocode" % "junit-interface" % "0.11" % "test"
+    )  
+  )
