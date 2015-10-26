@@ -1,17 +1,11 @@
 package com.wuyuntao.aeneas.tests.events
 
+import java.time.OffsetDateTime
+import java.util.UUID
+
 import com.wuyuntao.aeneas.Event
-import com.wuyuntao.aeneas.QuerySet
 
-/**
- * @author Wu Yuntao
- */
-object UserLoggedOut {
-  val query = new QuerySet[UserLoggedOut]()
-}
-
-class UserLoggedOut extends Event {
-  def onSave = {
-    
-  }
-}
+class UserLoggedOut(val owner: UUID,
+                    val revision: Int,
+                    val timestamp: OffsetDateTime)
+  extends Event

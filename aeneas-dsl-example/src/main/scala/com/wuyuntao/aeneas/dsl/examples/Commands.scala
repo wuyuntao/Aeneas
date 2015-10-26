@@ -2,7 +2,7 @@ package com.wuyuntao.aeneas.dsl.examples
 
 import com.wuyuntao.aeneas.dsl.{ Command, Column }
 
-class RegisterNewAccount extends Command {
+class Register extends Command {
   val email = Column[String](1)
   val password = Column[String](1)
   val passwordConfirmation = Column[String](1)
@@ -11,7 +11,7 @@ class RegisterNewAccount extends Command {
   val gender = Column[String](2)
 }
 
-class LoginAccount extends Command {
+class Login extends Command {
   val email = Column[String](1)
   val password = Column[String](1)
   
@@ -19,5 +19,11 @@ class LoginAccount extends Command {
   val device = Column[Device](2)
 }
 
-class LogoutAccount extends Command {
+class Logout extends Command {
+}
+
+class ChangePassword extends Command {
+  val currentPassword = Column[String](1)
+  val newPassword = Column[String](1)
+  val newPasswordConfirmation = Column[String](1)
 }

@@ -1,7 +1,10 @@
 package com.wuyuntao.aeneas.tests.commands
 
+import java.time.OffsetDateTime
 import java.util.UUID
 
 import com.wuyuntao.aeneas.Command
 
-class Logout(val id: UUID, val email: String, val password: String) extends Command {}
+case class Logout(val owner: UUID,
+                  val timestamp: OffsetDateTime)
+  extends Command

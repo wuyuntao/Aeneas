@@ -6,10 +6,8 @@ import java.util.UUID
 /**
  * @author Wu Yuntao
  */
-abstract trait Event extends Table {
-  column[UUID]("owner")
-  column[Int]("revision")
-  column[OffsetDateTime]("time")
-
-  def onSave
+abstract trait Event {
+  val owner: UUID
+  val revision: Int
+  val timestamp:OffsetDateTime 
 }

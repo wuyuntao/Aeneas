@@ -1,47 +1,21 @@
 package com.wuyuntao.aeneas.tests.events
 
+import java.time.OffsetDateTime
+import java.util.UUID
+
 import com.wuyuntao.aeneas.Event
-import com.wuyuntao.aeneas.QuerySet
-import com.wuyuntao.aeneas.tests.snapshots.AccountByUsername
-import com.wuyuntao.aeneas.tests.snapshots.AccountByEmail
-import com.wuyuntao.aeneas.tests.snapshots.AccountById
 
-/**
- * @author Wu Yuntao
- */
-object UserCreated {
-  val query = new QuerySet[UserCreated]()
-}
+case class UserCreated(val owner: UUID,
+                       val revision: Int,
+                       val timestamp: OffsetDateTime,
+                       val email: String,
+                       val password: String,
+                       val username: String,
+                       val gender: String)
+  extends Event {
 
-class UserCreated extends Event {
-  column[String]("email")
-  column[String]("password")
-  column[String]("username")
-
-  def onSave = {
-    // Create all snapshots of account
-    val accountById = new AccountById
-    accountById.owner = this.owner
-    accountById.revision = this.revision
-    accountById.username = this.username
-    accountById.password = this.password
-    accountById.lastLoginTime = this.time
-
-    AccountById.query.create(accountById)
-
-    val accountByEmail = new AccountByEmail()
-    accountByEmail.owner = this.owner
-    accountByEmail.revision = this.revision
-    accountByEmail.email = this.email
-    accountByEmail.password = this.password
-
-    AccountByEmail.query.create(accountByEmail)
-
-    val accountByUsername = new AccountByUsername
-    accountByUsername.owner = this.owner
-    accountByUsername.revision = this.revision
-    accountByUsername.username = this.username
-
-    AccountByUsername.query.create(accountByUsername)
+  // Version: 1
+  def this(owner: UUID, revision: Int, timestamp: OffsetDateTime, email: String, password: String, username: String) = {
+    this(owner, revision, timestamp, email, password, username, "Unknown")
   }
 }
