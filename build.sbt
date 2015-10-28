@@ -13,8 +13,11 @@ lazy val core = (project in file("aeneas-core")).
     name := "aeneas",
 
     libraryDependencies ++= Seq(
-      "com.datastax.cassandra"  % "cassandra-driver-core" % "2.1.7",
+      "com.datastax.cassandra"  % "cassandra-driver-core" % "2.1.8",
       "com.typesafe" % "config" % "1.3.0",
+
+      "com.typesafe.akka" %% "akka-persistence" % "2.4.0",
+      "com.typesafe.akka" %% "akka-persistence-query-experimental" % "2.4.0",
 
       "junit" % "junit" % "4.11" % "test",
       "com.novocode" % "junit-interface" % "0.11" % "test"
@@ -43,7 +46,7 @@ lazy val dslExample = (project in file("aeneas-dsl-example")).
   dependsOn(dsl).
   settings(commonSettings: _*).
   settings(
-    name := "aeneas-dsl-examples"
+    name := "aeneas-dsl-example"
   )
 
 lazy val dslCodeGen = (project in file("aeneas-dsl-codegen")).
@@ -59,3 +62,28 @@ lazy val dslCodeGen = (project in file("aeneas-dsl-codegen")).
       "com.novocode" % "junit-interface" % "0.11" % "test"
     )  
   )
+
+lazy val migration = (project in file("aeneas-migration")).
+  settings(commonSettings: _*).
+  settings(
+    name := "aeneas-migration",
+
+    libraryDependencies ++= Seq(
+      "com.datastax.cassandra"  % "cassandra-driver-core" % "2.1.8",
+      "com.typesafe" % "config" % "1.3.0",
+      "io.github.lukehutch" % "fast-classpath-scanner" % "1.9.7",
+      "org.scala-lang" % "scala-reflect" % "2.11.7",
+      "ch.qos.logback" % "logback-classic" % "1.1.3",
+
+      "junit" % "junit" % "4.11" % "test",
+      "com.novocode" % "junit-interface" % "0.11" % "test"
+    )  
+  )
+
+lazy val migrationExample = (project in file("aeneas-migration-example")).
+  dependsOn(migration).
+  settings(commonSettings: _*).
+  settings(
+    name := "aeneas-migration-example"
+  )
+
