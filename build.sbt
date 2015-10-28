@@ -71,9 +71,9 @@ lazy val migration = (project in file("aeneas-migration")).
     libraryDependencies ++= Seq(
       "com.datastax.cassandra"  % "cassandra-driver-core" % "2.1.8",
       "com.typesafe" % "config" % "1.3.0",
-      "io.github.lukehutch" % "fast-classpath-scanner" % "1.9.7",
       "org.scala-lang" % "scala-reflect" % "2.11.7",
       "ch.qos.logback" % "logback-classic" % "1.1.3",
+      "org.reflections" % "reflections" % "0.9.10",
 
       "junit" % "junit" % "4.11" % "test",
       "com.novocode" % "junit-interface" % "0.11" % "test"

@@ -1,17 +1,15 @@
 package com.wuyuntao.aeneas.migration
 
-import java.time.OffsetDateTime
-
+import java.util.Date
+import scala.annotation.migration
 import scala.collection.JavaConversions.asScalaBuffer
-import scala.reflect.runtime.{universe => ru}
-
+import scala.collection.JavaConversions.asScalaSet
+import org.reflections.Reflections
 import org.slf4j.LoggerFactory
-
 import com.datastax.driver.core.Cluster
 import com.datastax.driver.core.querybuilder.QueryBuilder
 import com.typesafe.config.Config
-
-import io.github.lukehutch.fastclasspathscanner.FastClasspathScanner
+import scala.collection.mutable.HashMap
 
 object Migrator {
   def apply(config: Config): Migrator = new Migrator(config)
@@ -40,7 +38,7 @@ class Migrator private[migration] (private val config: Config) {
       migration.up(batch)
       addVersion(migration)
     }
-    
+
     closeSession
   }
 
@@ -65,7 +63,7 @@ class Migrator private[migration] (private val config: Config) {
         }
       }
     }
-    
+
     closeSession
   }
 
@@ -89,24 +87,31 @@ class Migrator private[migration] (private val config: Config) {
       |  )
       |""".stripMargin)
   }
-  
+
   private def closeSession = {
     session.close
     session.getCluster.close
   }
 
   private def getDefinedMigrations: Seq[Migration] = {
-    val mirror = ru.runtimeMirror(getClass.getClassLoader)
-    val scanner = new FastClasspathScanner().scan()
-    val classes = scanner.getNamesOfClassesImplementing("com.wuyuntao.aeneas.migration.Migration")
+    val migrations = new HashMap[Long, Migration]()
+    val packages = config.getStringList("packages")
 
-    logger.debug("Found {} migrations", classes.size)
-    
-    scanner.getNamesOfAllClasses.filter { _.startsWith("com.wuyuntao") }.foreach { println }
-    
-    classes.map { c =>
-      Class.forName(c).newInstance().asInstanceOf[Migration]
+    for (p <- packages) {
+      val reflections = new Reflections(p)
+      val classes = reflections.getSubTypesOf(classOf[Migration])
+
+      for (c <- classes) {
+        val migration = c.getDeclaredConstructors()(0).newInstance().asInstanceOf[Migration]
+
+        if (!migrations.contains(migration.version))
+          migrations.put(migration.version, migration)
+        else
+          throw new Exception()
+      }
     }
+
+    migrations.values.toSeq.sortWith(_.version < _.version)
   }
 
   private def getSortedAppliedMigrationVersions: Seq[Long] = {
@@ -125,8 +130,8 @@ class Migrator private[migration] (private val config: Config) {
 
     val statement = QueryBuilder.insertInto(keyspace, table).
       value("version", migration.version).
-      value("name", migration.getClass.getName).
-      value("timestamp", OffsetDateTime.now)
+      value("name", migration.getClass.getSimpleName).
+      value("timestamp", new Date)
 
     logger.debug(s"Migration ${migration.version} - ${migration.getClass.getName} added")
 
