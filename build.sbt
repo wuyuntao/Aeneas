@@ -49,11 +49,11 @@ lazy val dslExample = (project in file("aeneas-dsl-example")).
     name := "aeneas-dsl-example"
   )
 
-lazy val dslCodeGen = (project in file("aeneas-dsl-codegen")).
+lazy val cli = (project in file("aeneas-cli")).
   dependsOn(dsl).
   settings(commonSettings: _*).
   settings(
-    name := "aeneas-dsl-codegen",
+    name := "aeneas-cli",
 
     libraryDependencies ++= Seq(
       "com.github.scopt" %% "scopt" % "3.3.0",
