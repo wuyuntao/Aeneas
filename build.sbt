@@ -24,11 +24,11 @@ lazy val core = (project in file("aeneas-core")).
     )  
   )
 
-lazy val examples = (project in file("aeneas-examples")).
+lazy val example = (project in file("aeneas-example")).
   dependsOn(core).
   settings(commonSettings: _*).
   settings(
-    name := "aeneas-examples"
+    name := "aeneas-example"
   )
 
 lazy val dsl = (project in file("aeneas-dsl")).

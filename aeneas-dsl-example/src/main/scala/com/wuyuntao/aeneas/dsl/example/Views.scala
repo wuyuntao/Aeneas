@@ -1,4 +1,4 @@
-package com.wuyuntao.aeneas.dsl.examples
+package com.wuyuntao.aeneas.dsl.example
 
 import java.time.OffsetDateTime
 import java.util.UUID

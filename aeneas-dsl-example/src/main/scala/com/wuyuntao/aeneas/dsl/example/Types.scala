@@ -1,4 +1,4 @@
-package com.wuyuntao.aeneas.dsl.examples
+package com.wuyuntao.aeneas.dsl.example
 
 import com.wuyuntao.aeneas.dsl.{ Type, Column }
 

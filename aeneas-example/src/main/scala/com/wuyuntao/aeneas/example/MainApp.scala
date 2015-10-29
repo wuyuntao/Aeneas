@@ -1,4 +1,4 @@
-package com.wuyuntao.aeneas.examples
+package com.wuyuntao.aeneas.example
 
 /**
  * @author Wu Yuntao
