@@ -24,29 +24,20 @@ lazy val core = (project in file("aeneas-core")).
     )  
   )
 
-lazy val example = (project in file("aeneas-example")).
-  dependsOn(core).
-  settings(commonSettings: _*).
-  settings(
-    name := "aeneas-example"
-  )
-
 lazy val dsl = (project in file("aeneas-dsl")).
   settings(commonSettings: _*).
   settings(
     name := "aeneas-dsl",
 
     libraryDependencies ++= Seq(
+      "com.typesafe" % "config" % "1.3.0",
+      "ch.qos.logback" % "logback-classic" % "1.1.3",
+      "org.reflections" % "reflections" % "0.9.10",
+      "com.github.scopt" %% "scopt" % "3.3.0",
+
       "junit" % "junit" % "4.11" % "test",
       "com.novocode" % "junit-interface" % "0.11" % "test"
     )  
-  )
-
-lazy val dslExample = (project in file("aeneas-dsl-example")).
-  dependsOn(dsl).
-  settings(commonSettings: _*).
-  settings(
-    name := "aeneas-dsl-example"
   )
 
 lazy val cli = (project in file("aeneas-cli")).
@@ -79,6 +70,20 @@ lazy val migration = (project in file("aeneas-migration")).
       "junit" % "junit" % "4.11" % "test",
       "com.novocode" % "junit-interface" % "0.11" % "test"
     )  
+  )
+
+lazy val example = (project in file("aeneas-example")).
+  dependsOn(core).
+  settings(commonSettings: _*).
+  settings(
+    name := "aeneas-example"
+  )
+
+lazy val dslExample = (project in file("aeneas-dsl-example")).
+  dependsOn(dsl).
+  settings(commonSettings: _*).
+  settings(
+    name := "aeneas-dsl-example"
   )
 
 lazy val migrationExample = (project in file("aeneas-migration-example")).

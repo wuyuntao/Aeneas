@@ -1,15 +1,17 @@
 package com.wuyuntao.aeneas.migration
 
 import java.util.Date
-import scala.annotation.migration
+
 import scala.collection.JavaConversions.asScalaBuffer
 import scala.collection.JavaConversions.asScalaSet
+import scala.collection.mutable.HashMap
+
 import org.reflections.Reflections
 import org.slf4j.LoggerFactory
+
 import com.datastax.driver.core.Cluster
 import com.datastax.driver.core.querybuilder.QueryBuilder
 import com.typesafe.config.Config
-import scala.collection.mutable.HashMap
 
 object Migrator {
   def apply(config: Config): Migrator = new Migrator(config)
@@ -111,7 +113,7 @@ class Migrator private[migration] (private val config: Config) {
         if (!migrations.contains(migration.version))
           migrations.put(migration.version, migration)
         else
-          throw new Exception()
+          throw new IllegalArgumentException(s"Duplicate migration version ${migration.version}")
       }
     }
 
