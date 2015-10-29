@@ -50,7 +50,7 @@ lazy val dslExample = (project in file("aeneas-dsl-example")).
   )
 
 lazy val cli = (project in file("aeneas-cli")).
-  dependsOn(dsl).
+  dependsOn(migration).
   settings(commonSettings: _*).
   settings(
     name := "aeneas-cli",
