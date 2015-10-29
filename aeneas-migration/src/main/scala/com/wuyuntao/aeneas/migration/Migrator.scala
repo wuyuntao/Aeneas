@@ -30,7 +30,7 @@ class Migrator private[migration] (private val config: Config) {
   def migrate() = {
     createKeyspaceAndMigrationsTable
 
-    val versions = getSortedAppliedMigrationVersions
+    val versions = getSortedAppliedMigrationVersions.map { _.version }
     val migrations = getDefinedMigrations
 
     for (migration <- migrations if !versions.contains(migration.version)) {
@@ -38,14 +38,12 @@ class Migrator private[migration] (private val config: Config) {
       migration.up(batch)
       addVersion(migration)
     }
-
-    closeSession
   }
 
   def migrateTo(version: Long) = {
     createKeyspaceAndMigrationsTable
 
-    val versions = getSortedAppliedMigrationVersions
+    val versions = getSortedAppliedMigrationVersions.map { _.version }
     val migrations = getDefinedMigrations
 
     for (migration <- migrations) {
@@ -63,8 +61,19 @@ class Migrator private[migration] (private val config: Config) {
         }
       }
     }
+  }
 
-    closeSession
+  def list = {
+    getDefinedMigrations.map { m => new MigrationInfo(m) }
+  }
+
+  def listDb = {
+    getSortedAppliedMigrationVersions
+  }
+
+  def close = {
+    session.close
+    session.getCluster.close
   }
 
   private def createKeyspaceAndMigrationsTable = {
@@ -88,12 +97,7 @@ class Migrator private[migration] (private val config: Config) {
       |""".stripMargin)
   }
 
-  private def closeSession = {
-    session.close
-    session.getCluster.close
-  }
-
-  private def getDefinedMigrations: Seq[Migration] = {
+  private def getDefinedMigrations = {
     val migrations = new HashMap[Long, Migration]()
     val packages = config.getStringList("packages")
 
@@ -114,14 +118,14 @@ class Migrator private[migration] (private val config: Config) {
     migrations.values.toSeq.sortWith(_.version < _.version)
   }
 
-  private def getSortedAppliedMigrationVersions: Seq[Long] = {
+  private def getSortedAppliedMigrationVersions: Seq[MigrationInfo] = {
     val keyspace = config.getString("cassandra.keyspace")
     val table = config.getString("cassandra.table")
 
-    val cql = s"""SELECT version
+    val cql = s"""SELECT version, name, timestamp
       |  FROM ${keyspace}.${table}
       |""".stripMargin
-    session.execute(cql).all.map { _.getLong("version") }.sorted.toSeq
+    session.execute(cql).all.map { new MigrationInfo(_) }.sortWith { _.version < _.version }.toSeq
   }
 
   private def addVersion(migration: Migration) = {

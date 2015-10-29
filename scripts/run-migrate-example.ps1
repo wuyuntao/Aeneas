@@ -2,4 +2,4 @@ cd "$PSScriptRoot\.."
 
 sbt package # Compile all packages
 
-sbt ";project migrationExample; run"
+sbt ";project migrationExample; run $args"

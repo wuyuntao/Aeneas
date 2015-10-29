@@ -74,6 +74,7 @@ lazy val migration = (project in file("aeneas-migration")).
       "org.scala-lang" % "scala-reflect" % "2.11.7",
       "ch.qos.logback" % "logback-classic" % "1.1.3",
       "org.reflections" % "reflections" % "0.9.10",
+      "com.github.scopt" %% "scopt" % "3.3.0",
 
       "junit" % "junit" % "4.11" % "test",
       "com.novocode" % "junit-interface" % "0.11" % "test"
