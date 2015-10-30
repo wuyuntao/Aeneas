@@ -66,10 +66,14 @@ class Migrator private[migration] (private val config: Config) {
   }
 
   def list = {
+    createKeyspaceAndMigrationsTable
+    
     getDefinedMigrations.map { m => new MigrationInfo(m) }
   }
 
   def listDb = {
+    createKeyspaceAndMigrationsTable
+    
     getSortedAppliedMigrationVersions
   }
 

@@ -9,13 +9,12 @@ import com.wuyuntao.aeneas.dsl.View
 class UserByEmail extends View {
   val email = Column[String](1)
   val id = Column[UUID](1)
-  val password = Column[String](1)
 }
 
 class UserById extends View {
   val id = Column[UUID](1)
   val email = Column[String](1)
-  val lastLloginTtime = Column[OffsetDateTime](1)
+  val lastLoginTtime = Column[OffsetDateTime](1)
 }
 
 class UserByName extends View {

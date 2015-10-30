@@ -8,12 +8,11 @@ class CreateUserCreatedEventTable extends Migration {
 
   def up(db: DbModifier) = {
     db.executeSql("""CREATE TABLE user_created_events (
-      |  event_id timeuuid,
+      |  event_id timeuuid PRIMARY KEY,
       |  event_version int,
       |  email text,
       |  password text,
-      |  username text,
-      |  PRIMARY KEY event_id
+      |  username text
       |)
       |""".stripMargin)
   }
