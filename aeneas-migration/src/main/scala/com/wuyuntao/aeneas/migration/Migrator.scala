@@ -23,7 +23,7 @@ class Migrator private[migration] (private val config: Config) {
   private lazy val session = {
     val builder = Cluster.builder
 
-    config.getStringList("cassandra.contact-points").foreach { builder.addContactPoint }
+    config.getStringList("database.cassandra.contact-points").foreach { builder.addContactPoint }
 
     val cluster = builder.build
     cluster.connect
@@ -79,8 +79,8 @@ class Migrator private[migration] (private val config: Config) {
   }
 
   private def createKeyspaceAndMigrationsTable = {
-    val keyspace = config.getString("cassandra.keyspace")
-    val table = config.getString("cassandra.table")
+    val keyspace = config.getString("database.cassandra.keyspace")
+    val table = config.getString("migration.table")
 
     session.execute(s"""CREATE KEYSPACE IF NOT EXISTS ${keyspace}
       |  WITH REPLICATION = {
@@ -101,7 +101,7 @@ class Migrator private[migration] (private val config: Config) {
 
   private def getDefinedMigrations = {
     val migrations = new HashMap[Long, Migration]()
-    val packages = config.getStringList("packages")
+    val packages = config.getStringList("dsl.packages")
 
     for (p <- packages) {
       val reflections = new Reflections(p)
@@ -121,8 +121,8 @@ class Migrator private[migration] (private val config: Config) {
   }
 
   private def getSortedAppliedMigrationVersions: Seq[MigrationInfo] = {
-    val keyspace = config.getString("cassandra.keyspace")
-    val table = config.getString("cassandra.table")
+    val keyspace = config.getString("database.cassandra.keyspace")
+    val table = config.getString("migration.table")
 
     val cql = s"""SELECT version, name, timestamp
       |  FROM ${keyspace}.${table}
@@ -131,8 +131,8 @@ class Migrator private[migration] (private val config: Config) {
   }
 
   private def addVersion(migration: Migration) = {
-    val keyspace = config.getString("cassandra.keyspace")
-    val table = config.getString("cassandra.table")
+    val keyspace = config.getString("database.cassandra.keyspace")
+    val table = config.getString("migration.table")
 
     val statement = QueryBuilder.insertInto(keyspace, table).
       value("version", migration.version).
@@ -145,8 +145,8 @@ class Migrator private[migration] (private val config: Config) {
   }
 
   private def removeVersion(migration: Migration) = {
-    val keyspace = config.getString("cassandra.keyspace")
-    val table = config.getString("cassandra.table")
+    val keyspace = config.getString("database.cassandra.keyspace")
+    val table = config.getString("migration.table")
 
     val cql = s"""DELETE FROM ${keyspace}.${table}
       |  WHERE version = ${migration.version}

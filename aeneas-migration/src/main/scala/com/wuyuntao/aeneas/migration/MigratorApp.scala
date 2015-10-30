@@ -6,7 +6,7 @@ import scopt.OptionParser
 
 trait MigratorApp extends App {
 
-  object Command extends Enumeration {
+  private object Command {
     val Migrate = "migrate"
     val List = "list"
     val ListDb = "listdb"
@@ -35,7 +35,7 @@ trait MigratorApp extends App {
     }
 
     val config = ConfigFactory.load()
-    val migrator = Migrator(config.getConfig("aeneas.migration"))
+    val migrator = Migrator(config.getConfig("aeneas"))
 
     parser.parse(args, Config()) match {
       case Some(c) =>
