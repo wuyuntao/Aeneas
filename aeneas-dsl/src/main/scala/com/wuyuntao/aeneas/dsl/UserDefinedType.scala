@@ -1,5 +1,7 @@
 package com.wuyuntao.aeneas.dsl
 
-abstract class UserDefinedType {
+import com.wuyuntao.aeneas.util.Text
 
+abstract class UserDefinedType {
+  def name = Text.underscore(getClass.getSimpleName)
 }

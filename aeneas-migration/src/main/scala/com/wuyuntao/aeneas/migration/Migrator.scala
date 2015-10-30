@@ -101,20 +101,18 @@ class Migrator private[migration] (private val config: Config) {
 
   private def getDefinedMigrations = {
     val migrations = new HashMap[Long, Migration]()
-    val packages = config.getStringList("dsl.packages")
+    val packageName = config.getString("migration.package")
 
-    for (p <- packages) {
-      val reflections = new Reflections(p)
-      val classes = reflections.getSubTypesOf(classOf[Migration])
+    val reflections = new Reflections(packageName)
+    val classes = reflections.getSubTypesOf(classOf[Migration])
 
-      for (c <- classes) {
-        val migration = c.getDeclaredConstructors()(0).newInstance().asInstanceOf[Migration]
+    for (c <- classes) {
+      val migration = c.getDeclaredConstructors()(0).newInstance().asInstanceOf[Migration]
 
-        if (!migrations.contains(migration.version))
-          migrations.put(migration.version, migration)
-        else
-          throw new IllegalArgumentException(s"Duplicate migration version ${migration.version}")
-      }
+      if (!migrations.contains(migration.version))
+        migrations.put(migration.version, migration)
+      else
+        throw new IllegalArgumentException(s"Duplicate migration version ${migration.version}")
     }
 
     migrations.values.toSeq.sortWith(_.version < _.version)
