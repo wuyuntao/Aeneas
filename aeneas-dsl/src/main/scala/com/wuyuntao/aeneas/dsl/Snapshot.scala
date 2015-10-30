@@ -1,5 +1,7 @@
 package com.wuyuntao.aeneas.dsl
 
-abstract class Snapshot extends Table {
+import com.wuyuntao.aeneas.util.Text
 
+abstract class Snapshot extends Table {
+  def name = "{}_snapshots".format(Text.underscore(getClass.getSimpleName))
 }

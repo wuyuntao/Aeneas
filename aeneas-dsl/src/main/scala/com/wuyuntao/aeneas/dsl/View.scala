@@ -1,5 +1,7 @@
 package com.wuyuntao.aeneas.dsl
 
-abstract class View extends Table {
+import com.wuyuntao.aeneas.util.Text
 
+abstract class View extends Table {
+  def name = "{}_views".format(Text.underscore(getClass.getSimpleName))
 }

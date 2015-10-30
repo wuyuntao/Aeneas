@@ -1,5 +1,7 @@
 package com.wuyuntao.aeneas.dsl
 
-abstract class Query extends Table {
+import com.wuyuntao.aeneas.util.Text
 
+abstract class Query extends Table {
+  def name = "{}_queries".format(Text.underscore(getClass.getSimpleName))
 }
